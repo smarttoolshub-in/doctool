@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DocPhotoHub - फ्री PDF Compressor, Resizer और Tools</title>
-  <meta name="description" content="ऑनलाइन PDF का साइज कम करें, सरकारी फॉर्म फोटो 20KB-50KB रिसाइज करें, फोटो से PDF बनाएं। 100% फ्री और सुरक्षित।">
-  <meta name="keywords" content="compress pdf online, reduce pdf size, photo resizer 20kb, merge pdf, image to pdf, free pdf tools">
+  <title>DocPhotoHub - फ्री PDF Compressor (कस्टम KB) और Tools</title>
+  <meta name="description" content="ऑनलाइन मनपसंद KB में PDF कंप्रेस करें (100KB, 200KB, 500KB), सरकारी फॉर्म फोटो रिसाइज करें। 100% फ्री और सुरक्षित।">
+  <meta name="keywords" content="compress pdf to 200kb, reduce pdf size to 100kb, photo resizer 20kb, merge pdf, free pdf tools">
   <meta name="author" content="smarttoolshub-in">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- jsPDF CDN (PDF बनाने और कंप्रेस करने के लिए) -->
+  <!-- jsPDF CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- pdf-lib CDN (PDF Merge के लिए) -->
+  <!-- pdf-lib CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <!-- pdf.js CDN (PDF पेजों को पढ़ने और कंप्रेस करने के लिए) -->
+  <!-- pdf.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
@@ -25,10 +25,10 @@
     <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <div class="text-center sm:text-left">
         <h1 class="text-2xl font-black tracking-wide">⚡ DocPhotoHub</h1>
-        <p class="text-xs text-emerald-100 mt-0.5">PDF Compress, Photo Resizer और सरकारी फॉर्म टूल्स</p>
+        <p class="text-xs text-emerald-100 mt-0.5">मनपसंद KB में PDF Compress, Photo Resizer व टूल्स</p>
       </div>
       <div class="text-xs bg-white/20 px-3 py-1.5 rounded-full font-medium backdrop-blur-sm">
-        🔒 100% प्राइवेट (फाइल सर्वर पर नहीं जाती)
+        🔒 100% सुरक्षित (डिवाइस में प्रोसेस)
       </div>
     </div>
   </header>
@@ -49,29 +49,33 @@
   <!-- Main Tools Container -->
   <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
 
-    <!-- 1. Compress PDF Tool (NEW) -->
+    <!-- 1. Compress PDF Tool (Custom KB Enabled) -->
     <div id="tool-compresspdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">🗜️</span>
-        <h2 class="text-lg font-bold text-slate-800">Compress PDF (फाइल साइज कम करें)</h2>
+        <h2 class="text-lg font-bold text-slate-800">Compress PDF (कस्टम KB सेट करें)</h2>
       </div>
-      <p class="text-xs text-slate-500 mb-4">बड़ी PDF फाइलों को कंप्रेस करके कॉलेज, जॉब पोर्टल या ईमेल के लिए छोटा बनाएं।</p>
+      <p class="text-xs text-slate-500 mb-4">जितनी KB की PDF चाहिए, यहाँ टाइप करें या बटन दबाएं (जैसे 100KB, 200KB, 500KB)।</p>
       
-      <div class="space-y-3">
+      <div class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">PDF फाइल चुनें:</label>
           <input type="file" id="compressPdfInput" accept="application/pdf" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
         </div>
+
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">कंप्रेशन स्तर (Compression Level):</label>
-          <select id="pdfCompressLevel" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm bg-white">
-            <option value="0.5">मध्यम कंप्रेशन (Recommended - संतुलित क्वालिटी)</option>
-            <option value="0.3">अधिकतम कंप्रेशन (Maximum Compression - सबसे छोटा साइज)</option>
-            <option value="0.7">हल्का कंप्रेशन (High Quality - बेहतर क्वालिटी)</option>
-          </select>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">टार्गेट साइज चुनें या लिखें (KB में):</label>
+          <div class="grid grid-cols-4 gap-2 mb-2">
+            <button type="button" onclick="setTargetKb(100)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">100 KB</button>
+            <button type="button" onclick="setTargetKb(200)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">200 KB</button>
+            <button type="button" onclick="setTargetKb(300)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">300 KB</button>
+            <button type="button" onclick="setTargetKb(500)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">500 KB</button>
+          </div>
+          <input type="number" id="pdfTargetKb" placeholder="या खुद से अपनी पसंद का KB लिखें (उदा. 150 या 400)" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
         </div>
-        <button onclick="processCompressPdf()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
-          PDF कंप्रेस करें (Compress Now)
+
+        <button onclick="processCompressPdf()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+          PDF कंप्रेस करें (Compress to Target KB)
         </button>
       </div>
 
@@ -124,7 +128,7 @@
         <span class="text-2xl">📑</span>
         <h2 class="text-lg font-bold text-slate-800">Photo to PDF Converter</h2>
       </div>
-      <p class="text-xs text-slate-500 mb-4">एक या एक से अधिक तस्वीरों को मिलाकर एक साफ A4 PDF फाइल बनाएं।</p>
+      <p class="text-xs text-slate-500 mb-4">एक या एक से अधिक तस्वीरों को मिलाकर एक साफ A4 PDF बनाएं।</p>
       <div class="space-y-3">
         <input type="file" id="pdfImgInput" accept="image/*" multiple class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
         <button onclick="processImgToPdf()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
@@ -140,7 +144,7 @@
         <span class="text-2xl">📎</span>
         <h2 class="text-lg font-bold text-slate-800">Merge PDF Files (पीडीएफ जोड़ें)</h2>
       </div>
-      <p class="text-xs text-slate-500 mb-4">दो या उससे अधिक PDF फाइलों को जोड़कर एक फाइल बनाएं।</p>
+      <p class="text-xs text-slate-500 mb-4">दो या अधिक PDF फाइलों को जोड़कर एक फाइल बनाएं।</p>
       <div class="space-y-3">
         <input type="file" id="mergeInput" accept="application/pdf" multiple class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
         <button onclick="processMergePdf()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
@@ -220,9 +224,8 @@
     <p>© 2026 DocPhotoHub. सर्वाधिकार सुरक्षित।</p>
   </footer>
 
-  <!-- Core Scripts -->
+  <!-- Scripts -->
   <script>
-    // Tab Switching Logic
     function switchTab(tabId) {
       document.querySelectorAll('.tool-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(el => {
@@ -237,16 +240,24 @@
       document.getElementById('customKbBox').classList.toggle('hidden', val !== 'custom');
     }
 
-    // 1. PDF Compressor Logic
+    function setTargetKb(val) {
+      document.getElementById('pdfTargetKb').value = val;
+    }
+
+    // 1. PDF Compressor with Dynamic Target KB
     async function processCompressPdf() {
       const file = document.getElementById('compressPdfInput').files[0];
-      if (!file) return alert("कृपया एक PDF फाइल चुनें!");
+      if (!file) return alert("कृपया पहले एक PDF फाइल चुनें!");
       
-      const quality = parseFloat(document.getElementById('pdfCompressLevel').value);
+      let targetKb = parseFloat(document.getElementById('pdfTargetKb').value);
+      if (!targetKb || targetKb <= 0) {
+        targetKb = 200; // डिफ़ॉल्ट 200 KB
+      }
+
       const status = document.getElementById('compressPdfStatus');
       const resultBox = document.getElementById('compressPdfResult');
       
-      status.innerText = "PDF पढ़ी जा रही है, कृपया प्रतीक्षा करें...";
+      status.innerText = `PDF स्कैन हो रही है (टार्गेट: ~${targetKb} KB)...`;
       status.classList.remove('hidden');
       resultBox.classList.add('hidden');
 
@@ -258,13 +269,32 @@
         const pdf = await loadingTask.promise;
         const totalPages = pdf.numPages;
 
+        // प्रति पेज टार्गेट के हिसाब से स्केल और क्वालिटी तय करना
+        const targetPerPg = targetKb / totalPages;
+        let scale = 1.0;
+        let quality = 0.5;
+
+        if (targetPerPg <= 40) {
+          scale = 0.75;
+          quality = 0.25;
+        } else if (targetPerPg <= 80) {
+          scale = 0.9;
+          quality = 0.45;
+        } else if (targetPerPg <= 150) {
+          scale = 1.1;
+          quality = 0.65;
+        } else {
+          scale = 1.3;
+          quality = 0.8;
+        }
+
         const { jsPDF } = window.jspdf;
         const newPdf = new jsPDF('p', 'mm', 'a4');
 
         for (let i = 1; i <= totalPages; i++) {
           status.innerText = `पेज ${i} of ${totalPages} कंप्रेस हो रहा है...`;
           const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 1.2 });
+          const viewport = page.getViewport({ scale: scale });
           
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
@@ -282,16 +312,19 @@
         const oldKB = (file.size / 1024).toFixed(1);
         const newKB = (outBlob.size / 1024).toFixed(1);
 
-        document.getElementById('pdfSizeDetails').innerText = `पुरानी साइज: ${oldKB} KB ➔ नई साइज: ${newKB} KB`;
+        document.getElementById('pdfSizeDetails').innerHTML = `
+          <div>पुरानी साइज: <span class="text-slate-600">${oldKB} KB</span> ➔ नई साइज: <span class="text-emerald-700 font-bold">${newKB} KB</span></div>
+          <div class="text-[11px] text-slate-500 mt-1">(टार्गेट साइज: ${targetKb} KB)</div>
+        `;
         const dl = document.getElementById('compressPdfDlBtn');
         dl.href = URL.createObjectURL(outBlob);
-        dl.download = `compressed-${file.name}`;
+        dl.download = `compressed-${Math.round(newKB)}kb-${file.name}`;
 
         status.classList.add('hidden');
         resultBox.classList.remove('hidden');
       } catch (e) {
         console.error(e);
-        status.innerText = "त्रुटि: PDF फाइल को कंप्रेस नहीं किया जा सका।";
+        status.innerText = "त्रुटि: इस PDF फाइल को कंप्रेस नहीं किया जा सका।";
       }
     }
 
@@ -334,39 +367,4 @@
             currentKb = (dataUrl.length * 3 / 4) / 1024;
           }
 
-          document.getElementById('resizerPreview').src = dataUrl;
-          document.getElementById('sizeText').innerText = `पुरानी साइज: ${(file.size/1024).toFixed(1)} KB ➔ नई साइज: ${currentKb.toFixed(1)} KB`;
-          const dl = document.getElementById('resizerDownload');
-          dl.href = dataUrl;
-          dl.download = `resized-${Math.round(currentKb)}kb-${file.name.split('.')[0]}.jpg`;
-          document.getElementById('resizerResult').classList.remove('hidden');
-        };
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // 3. Images to PDF
-    async function processImgToPdf() {
-      const files = document.getElementById('pdfImgInput').files;
-      if (!files.length) return alert("कम से कम एक फोटो चुनें!");
-      const status = document.getElementById('pdfStatus');
-      status.innerText = "PDF तैयार हो रही है...";
-      status.classList.remove('hidden');
-
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-
-      for (let i = 0; i < files.length; i++) {
-        const dataUrl = await fileToDataUrl(files[i]);
-        if (i > 0) pdf.addPage();
-        pdf.addImage(dataUrl, 'JPEG', 10, 10, 190, 270);
-      }
-      pdf.save("photos-document.pdf");
-      status.innerText = "✅ PDF डाउनलोड हो गई!";
-    }
-
-    // 4. Merge PDFs
-    async function processMergePdf() {
-      const files = document.getElementById('mergeInput').files;
-      if (files.length < 2) return alert("कृपया कम से कम 2 PDF फाइलें चुनें!");
-      const status = document.getElementById('mergeStatus');
+          document.getElementById('resiz
