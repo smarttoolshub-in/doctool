@@ -6,7 +6,6 @@
   
   <title>DocPhotoHub - फ्री PDF Compressor (कस्टम KB) और Tools</title>
   <meta name="description" content="ऑनलाइन मनपसंद KB में PDF कंप्रेस करें (100KB, 200KB, 500KB), सरकारी फॉर्म फोटो रिसाइज करें। 100% फ्री और सुरक्षित।">
-  <meta name="keywords" content="compress pdf to 200kb, reduce pdf size to 100kb, photo resizer 20kb, merge pdf, free pdf tools">
   <meta name="author" content="smarttoolshub-in">
 
   <!-- Tailwind CSS CDN -->
@@ -15,8 +14,37 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- pdf-lib CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <!-- pdf.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- pdf.js CDN (Stable UMD Version) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+  <!-- Bulletproof Tab Switch Script (शीर्ष पर ताकि क्लिक तुरंत काम करे) -->
+  <script>
+    function switchTab(tabId) {
+      // 1. सभी टूल्स को छिपाएँ
+      const tools = document.querySelectorAll('.tool-content');
+      tools.forEach(tool => {
+        tool.style.display = 'none';
+      });
+
+      // 2. सभी बटनों को नार्मल स्टाइल दें
+      const btns = document.querySelectorAll('.tab-btn');
+      btns.forEach(btn => {
+        btn.className = 'tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200';
+      });
+
+      // 3. चुने हुए टूल को दिखाएँ
+      const activeTool = document.getElementById('tool-' + tabId);
+      if (activeTool) {
+        activeTool.style.display = 'block';
+      }
+
+      // 4. चुने हुए बटन को हाइलाइट करें
+      const activeBtn = document.getElementById('tab-' + tabId);
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-md';
+      }
+    }
+  </script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
@@ -25,7 +53,7 @@
     <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
       <div class="text-center sm:text-left">
         <h1 class="text-2xl font-black tracking-wide">⚡ DocPhotoHub</h1>
-        <p class="text-xs text-emerald-100 mt-0.5">मनपसंद KB में PDF Compress, Photo Resizer व टूल्स</p>
+        <p class="text-xs text-emerald-100 mt-0.5">मनपसंद KB में PDF Compress, Photo Resizer व सरकारी टूल्स</p>
       </div>
       <div class="text-xs bg-white/20 px-3 py-1.5 rounded-full font-medium backdrop-blur-sm">
         🔒 100% सुरक्षित (डिवाइस में प्रोसेस)
@@ -35,22 +63,22 @@
 
   <!-- Navigation Tabs -->
   <div class="max-w-6xl mx-auto px-4 mt-6 w-full">
-    <div class="flex flex-wrap gap-2 justify-center border-b border-slate-200 pb-3">
-      <button onclick="switchTab('compresspdf')" id="tab-compresspdf" class="tab-btn bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">🗜️ Compress PDF</button>
-      <button onclick="switchTab('resizer')" id="tab-resizer" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200">🖼️ Photo Resizer</button>
-      <button onclick="switchTab('img2pdf')" id="tab-img2pdf" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200">📑 Photo to PDF</button>
-      <button onclick="switchTab('mergepdf')" id="tab-mergepdf" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200">📎 Merge PDF</button>
-      <button onclick="switchTab('convert')" id="tab-convert" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200">🔄 Format Converter</button>
-      <button onclick="switchTab('passport')" id="tab-passport" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200">👤 Passport Size</button>
-      <button onclick="switchTab('rotate')" id="tab-rotate" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200">↻ Rotate Image</button>
+    <div class="flex flex-wrap gap-2 justify-center border-b border-slate-200 pb-4">
+      <button type="button" onclick="switchTab('compresspdf')" id="tab-compresspdf" class="tab-btn bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-md">🗜️ Compress PDF</button>
+      <button type="button" onclick="switchTab('resizer')" id="tab-resizer" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">🖼️ Photo Resizer</button>
+      <button type="button" onclick="switchTab('img2pdf')" id="tab-img2pdf" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">📑 Photo to PDF</button>
+      <button type="button" onclick="switchTab('mergepdf')" id="tab-mergepdf" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">📎 Merge PDF</button>
+      <button type="button" onclick="switchTab('convert')" id="tab-convert" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">🔄 Format Converter</button>
+      <button type="button" onclick="switchTab('passport')" id="tab-passport" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">👤 Passport Size</button>
+      <button type="button" onclick="switchTab('rotate')" id="tab-rotate" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">↻ Rotate Image</button>
     </div>
   </div>
 
   <!-- Main Tools Container -->
   <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
 
-    <!-- 1. Compress PDF Tool (Custom KB Enabled) -->
-    <div id="tool-compresspdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+    <!-- 1. Compress PDF Tool -->
+    <div id="tool-compresspdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: block;">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">🗜️</span>
         <h2 class="text-lg font-bold text-slate-800">Compress PDF (कस्टम KB सेट करें)</h2>
@@ -71,10 +99,10 @@
             <button type="button" onclick="setTargetKb(300)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">300 KB</button>
             <button type="button" onclick="setTargetKb(500)" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">500 KB</button>
           </div>
-          <input type="number" id="pdfTargetKb" placeholder="या खुद से अपनी पसंद का KB लिखें (उदा. 150 या 400)" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
+          <input type="number" id="pdfTargetKb" placeholder="या खुद से KB लिखें (उदा. 150 या 400)" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
         </div>
 
-        <button onclick="processCompressPdf()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+        <button type="button" onclick="processCompressPdf()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
           PDF कंप्रेस करें (Compress to Target KB)
         </button>
       </div>
@@ -90,7 +118,7 @@
     </div>
 
     <!-- 2. Govt Exam Resizer -->
-    <div id="tool-resizer" class="tool-content hidden bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+    <div id="tool-resizer" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">🖼️</span>
         <h2 class="text-lg font-bold text-slate-800">Govt Exam Photo & Signature Resizer</h2>
@@ -108,7 +136,7 @@
         <div id="customKbBox" class="hidden">
           <input type="number" id="customKbInput" placeholder="जैसे 50 (KB में)" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
         </div>
-        <button onclick="processCompress()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
+        <button type="button" onclick="processCompress()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
           साइज कम करें (Compress Now)
         </button>
       </div>
@@ -123,7 +151,7 @@
     </div>
 
     <!-- 3. Photo to PDF -->
-    <div id="tool-img2pdf" class="tool-content hidden bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+    <div id="tool-img2pdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">📑</span>
         <h2 class="text-lg font-bold text-slate-800">Photo to PDF Converter</h2>
@@ -131,7 +159,7 @@
       <p class="text-xs text-slate-500 mb-4">एक या एक से अधिक तस्वीरों को मिलाकर एक साफ A4 PDF बनाएं।</p>
       <div class="space-y-3">
         <input type="file" id="pdfImgInput" accept="image/*" multiple class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
-        <button onclick="processImgToPdf()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
+        <button type="button" onclick="processImgToPdf()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
           PDF बनाएं और डाउनलोड करें
         </button>
         <div id="pdfStatus" class="p-3 bg-teal-50 text-teal-900 rounded-lg text-xs font-semibold text-center hidden"></div>
@@ -139,7 +167,7 @@
     </div>
 
     <!-- 4. Merge PDFs -->
-    <div id="tool-mergepdf" class="tool-content hidden bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+    <div id="tool-mergepdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">📎</span>
         <h2 class="text-lg font-bold text-slate-800">Merge PDF Files (पीडीएफ जोड़ें)</h2>
@@ -147,7 +175,7 @@
       <p class="text-xs text-slate-500 mb-4">दो या अधिक PDF फाइलों को जोड़कर एक फाइल बनाएं।</p>
       <div class="space-y-3">
         <input type="file" id="mergeInput" accept="application/pdf" multiple class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
-        <button onclick="processMergePdf()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
+        <button type="button" onclick="processMergePdf()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
           सभी PDF जोड़ें (Merge)
         </button>
         <div id="mergeStatus" class="p-3 bg-blue-50 text-blue-900 rounded-lg text-xs font-semibold text-center hidden"></div>
@@ -155,7 +183,7 @@
     </div>
 
     <!-- 5. Format Converter -->
-    <div id="tool-convert" class="tool-content hidden bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+    <div id="tool-convert" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">🔄</span>
         <h2 class="text-lg font-bold text-slate-800">Image Format Converter</h2>
@@ -168,14 +196,14 @@
           <option value="image/png">PNG</option>
           <option value="image/webp">WebP</option>
         </select>
-        <button onclick="processConvertFormat()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
+        <button type="button" onclick="processConvertFormat()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
           कन्वर्ट करें और डाउनलोड करें
         </button>
       </div>
     </div>
 
     <!-- 6. Passport Size -->
-    <div id="tool-passport" class="tool-content hidden bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+    <div id="tool-passport" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">👤</span>
         <h2 class="text-lg font-bold text-slate-800">Passport Photo Resizer (3.5 × 4.5 cm)</h2>
@@ -183,7 +211,7 @@
       <p class="text-xs text-slate-500 mb-4">फोटो को आधिकारिक पासपोर्ट आकार (350 × 450 px) में फिट करें।</p>
       <div class="space-y-3">
         <input type="file" id="passportInput" accept="image/*" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
-        <button onclick="processPassportCrop()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
+        <button type="button" onclick="processPassportCrop()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm transition">
           पासपोर्ट साइज में बदलें
         </button>
       </div>
@@ -196,7 +224,7 @@
     </div>
 
     <!-- 7. Rotate Image -->
-    <div id="tool-rotate" class="tool-content hidden bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+    <div id="tool-rotate" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-2xl">↻</span>
         <h2 class="text-lg font-bold text-slate-800">Rotate & Flip Image</h2>
@@ -205,9 +233,9 @@
       <div class="space-y-3">
         <input type="file" id="rotateInput" accept="image/*" onchange="loadRotatePreview()" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
         <div class="flex gap-2">
-          <button onclick="rotateImage(90)" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs">↻ 90° Right</button>
-          <button onclick="rotateImage(-90)" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs">↺ 90° Left</button>
-          <button onclick="downloadRotated()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs">⬇️ Save</button>
+          <button type="button" onclick="rotateImage(90)" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs">↻ 90° Right</button>
+          <button type="button" onclick="rotateImage(-90)" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs">↺ 90° Left</button>
+          <button type="button" onclick="downloadRotated()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs">⬇️ Save</button>
         </div>
       </div>
       <div class="mt-4 text-center">
@@ -224,18 +252,8 @@
     <p>© 2026 DocPhotoHub. सर्वाधिकार सुरक्षित।</p>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Operational Handlers -->
   <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tool-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(el => {
-        el.className = 'tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2 rounded-xl text-xs font-bold transition border border-slate-200';
-      });
-      document.getElementById('tool-' + tabId).classList.remove('hidden');
-      const activeBtn = document.getElementById('tab-' + tabId);
-      activeBtn.className = 'tab-btn bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm';
-    }
-
     function toggleCustomKb(val) {
       document.getElementById('customKbBox').classList.toggle('hidden', val !== 'custom');
     }
@@ -250,9 +268,7 @@
       if (!file) return alert("कृपया पहले एक PDF फाइल चुनें!");
       
       let targetKb = parseFloat(document.getElementById('pdfTargetKb').value);
-      if (!targetKb || targetKb <= 0) {
-        targetKb = 200; // डिफ़ॉल्ट 200 KB
-      }
+      if (!targetKb || targetKb <= 0) targetKb = 200;
 
       const status = document.getElementById('compressPdfStatus');
       const resultBox = document.getElementById('compressPdfResult');
@@ -263,13 +279,12 @@
 
       try {
         const fileData = await file.arrayBuffer();
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         
         const loadingTask = pdfjsLib.getDocument({ data: fileData });
         const pdf = await loadingTask.promise;
         const totalPages = pdf.numPages;
 
-        // प्रति पेज टार्गेट के हिसाब से स्केल और क्वालिटी तय करना
         const targetPerPg = targetKb / totalPages;
         let scale = 1.0;
         let quality = 0.5;
@@ -353,18 +368,4 @@
           else if (img.width > 1200) scale = 1200 / img.width;
 
           canvas.width = img.width * scale;
-          canvas.height = img.height * scale;
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-          let quality = 0.8;
-          let dataUrl = canvas.toDataURL('image/jpeg', quality);
-          let currentKb = (dataUrl.length * 3 / 4) / 1024;
-
-          for (let i = 0; i < 5 && currentKb > targetKb; i++) {
-            quality -= 0.15;
-            if (quality < 0.1) break;
-            dataUrl = canvas.toDataURL('image/jpeg', quality);
-            currentKb = (dataUrl.length * 3 / 4) / 1024;
-          }
-
-          document.getElementById('resiz
+   
