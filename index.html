@@ -86,55 +86,84 @@
   <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
 
     <!-- 1. Compress PDF -->
-    <div id="tool-compresspdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: block;">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-2xl">🗜️</span>
-        <h2 class="text-lg font-bold text-slate-800">Compress PDF (सटीक टार्गेट KB)</h2>
-      </div>
-      <p class="text-xs text-slate-500 mb-4">जितनी KB की PDF चाहिए, यहाँ टाइप करें। अब फाइल बहुत ज्यादा छोटी नहीं होगी, बल्कि बेहतरीन क्वालिटी के साथ सटीक साइज बनेगी।</p>
+    
+    // 1. PDF Compressor (High Quality & Sharp Text Fix)
+    async function processCompressPdf() {
+      const file = document.getElementById('compressPdfInput').files[0];
+      if (!file) return alert("कृपया पहले एक PDF फाइल चुनें!");
       
-      <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-emerald-500 transition cursor-pointer mb-4" onclick="document.getElementById('compressPdfInput').click()">
-        <span class="text-3xl">📂</span>
-        <p class="text-xs font-semibold text-slate-600 mt-2">यहाँ PDF फाइल चुनें या ड्रैग करें</p>
-        <p id="compressPdfFileName" class="text-[11px] text-emerald-600 font-bold mt-1"></p>
-        <input type="file" id="compressPdfInput" accept="application/pdf" class="hidden" onchange="document.getElementById('compressPdfFileName').innerText = this.files[0] ? this.files[0].name : ''">
-      </div>
+      let targetKb = parseFloat(document.getElementById('pdfTargetKb').value) || 200;
+      const pBox = document.getElementById('compressProgressBox');
+      const pBar = document.getElementById('compressProgressBar');
+      const pStatus = document.getElementById('compressStatusText');
+      const pPercent = document.getElementById('compressPercentText');
+      const resultBox = document.getElementById('compressPdfResult');
 
-      <div class="space-y-3">
-        <label class="block text-xs font-semibold text-slate-600">टार्गेट साइज (KB में खुद टाइप करें):</label>
-        <div class="grid grid-cols-4 gap-2">
-          <button type="button" onclick="setTargetKb(100)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">100 KB</button>
-          <button type="button" onclick="setTargetKb(200)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">200 KB</button>
-          <button type="button" onclick="setTargetKb(300)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">300 KB</button>
-          <button type="button" onclick="setTargetKb(500)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">500 KB</button>
-        </div>
-        <input type="number" id="pdfTargetKb" value="200" placeholder="अपनी पसंद का KB लिखें (उदा. 300)" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm font-bold">
+      pBox.classList.remove('hidden');
+      resultBox.classList.add('hidden');
+      pBar.style.width = '10%';
+      pPercent.innerText = '10%';
+      pStatus.innerText = 'PDF स्कैन हो रही है...';
 
-        <div id="compressProgressBox" class="hidden space-y-1">
-          <div class="flex justify-between text-xs font-bold text-slate-600">
-            <span id="compressStatusText">प्रोसेसिंग...</span>
-            <span id="compressPercentText">0%</span>
-          </div>
-          <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-            <div id="compressProgressBar" class="bg-emerald-600 h-full w-0 transition-all duration-200"></div>
-          </div>
-        </div>
+      try {
+        const fileData = await file.arrayBuffer();
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        
+        const loadingTask = pdfjsLib.getDocument({ data: fileData });
+        const pdf = await loadingTask.promise;
+        const totalPages = pdf.numPages;
 
-        <button type="button" onclick="processCompressPdf()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
-          PDF कंप्रेस करें (Compress Now)
-        </button>
-      </div>
+        // Resolution aur quality ko high rakha hai taaki text blur na ho
+        let scale = 1.8; 
+        let quality = 0.85;
 
-      <div id="compressPdfResult" class="mt-5 p-4 bg-emerald-50 rounded-xl border border-emerald-200 hidden text-center space-y-3">
-        <p id="pdfSizeDetails" class="text-xs font-bold text-emerald-900"></p>
-        <div class="flex justify-center gap-2">
-          <a id="compressPdfDlBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2.5 px-6 rounded-lg transition shadow">
-            ⬇️ कंप्रेस PDF डाउनलोड करें
-          </a>
-        </div>
-      </div>
-    </div>
+        const { jsPDF } = window.jspdf;
+        const newPdf = new jsPDF('p', 'mm', 'a4');
 
+        for (let i = 1; i <= totalPages; i++) {
+          const progress = Math.round((i / totalPages) * 85);
+          pBar.style.width = progress + '%';
+          pPercent.innerText = progress + '%';
+          pStatus.innerText = `पेज ${i} / ${totalPages} कंप्रेस हो रहा है...`;
+
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: scale });
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+          const imgData = canvas.toDataURL('image/jpeg', quality);
+
+          if (i > 1) newPdf.addPage();
+          newPdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+        }
+
+        pBar.style.width = '100%';
+        pPercent.innerText = '100%';
+        pStatus.innerText = 'पूर्ण!';
+
+        const outBlob = newPdf.output('blob');
+        const oldKB = (file.size / 1024).toFixed(1);
+        const newKB = (outBlob.size / 1024).toFixed(1);
+
+        document.getElementById('pdfSizeDetails').innerHTML = `
+          <div>पुरानी साइज: <span class="text-slate-600">${oldKB} KB</span> ➔ नई साइज: <span class="text-emerald-700 font-bold">${newKB} KB</span></div>
+          <div class="text-[11px] text-slate-500 mt-1">(टार्गेट साइज: ${targetKb} KB - हाई क्वालिटी मोड)</div>
+        `;
+        const dl = document.getElementById('compressPdfDlBtn');
+        dl.href = URL.createObjectURL(outBlob);
+        dl.download = `compressed-HQ-${Math.round(newKB)}kb-${file.name}`;
+
+        pBox.classList.add('hidden');
+        resultBox.classList.remove('hidden');
+      } catch (e) {
+        console.error(e);
+        alert("इस PDF को कंप्रेस करने में समस्या आई।");
+        pBox.classList.add('hidden');
+      }
+    }
     <!-- 2. Photo & Signature Background Changer -->
     <div id="tool-bgchanger" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
       <div class="flex items-center gap-2 mb-2">
