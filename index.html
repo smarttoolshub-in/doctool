@@ -141,7 +141,7 @@
         <span class="text-2xl">🎨</span>
         <h2 class="text-lg font-bold text-slate-800">Photo & Signature Background Changer</h2>
       </div>
-      <p class="text-xs text-slate-500 mb-4">पासपोर्ट फोटो के पीछे रंग भरें या हस्ताक्षर (Sign) का बैकग्राउंड साफ करें।</p>
+      <p class="text-xs text-slate-500 mb-4">पासपोर्ट फोटो के पीछे रंग भरें या हस्ताक्षर (Sign) का बैकग्राउंड साफ करें (फेस और स्किन सुरक्षित रहेगी)।</p>
 
       <div class="space-y-4">
         <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-emerald-500 transition cursor-pointer" onclick="document.getElementById('bgImgInput').click()">
@@ -479,7 +479,7 @@
       }
     }
 
-    // 2. Background Changer
+    // 2. Background Changer (Skin Tone Protected)
     let loadedBgImg = null;
     let selectedBgMode = 'transparent';
 
@@ -520,7 +520,10 @@
         const r = data[i], g = data[i+1], b = data[i+2];
         const dist = Math.sqrt((r - bgR)**2 + (g - bgG)**2 + (b - bgB)**2);
 
-        if (dist < tolerance * 2.5) {
+        // Skin Tone Protection to prevent blurring/whitening face and clothes
+        const isSkinTone = (r > 90 && g > 60 && b > 40) && (r > g && g > b) && (Math.abs(r - g) < 40);
+
+        if (dist < tolerance * 2.2 && !isSkinTone) {
           if (selectedBgMode === 'transparent') {
             data[i+3] = 0;
           } else {
