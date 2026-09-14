@@ -182,188 +182,610 @@
         </div>
       </div>
     </div>
-      <!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta name="google-site-verification" content="xEymZ9ThRS4rpYEuodRwBhJD_bkIungjJ3YdxQGOmm0" />
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>DocPhotoHub - ऑल-इन-वन PDF & Photo टूलकिट (Background Changer, Compress & Resizer)</title>
-  <meta name="description" content="मुफ्त ऑनलाइन PDF कंप्रेसर, पासपोर्ट फोटो बैकग्राउंड चेंजर, सरकारी फॉर्म फोटो 20KB-50KB रिसाइजर और PDF टूल्स। 100% सुरक्षित।">
-  <meta name="author" content="smarttoolshub-in">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- jsPDF CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- pdf-lib CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <!-- pdf.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
-  <!-- Tab Switch & Helper Script -->
-  <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tool-content').forEach(tool => tool.style.display = 'none');
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.className = 'tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200';
-      });
-      const activeTool = document.getElementById('tool-' + tabId);
-      if (activeTool) activeTool.style.display = 'block';
-      const activeBtn = document.getElementById('tab-' + tabId);
-      if (activeBtn) activeBtn.className = 'tab-btn bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-md';
-    }
-
-    function shareOnWhatsApp(toolName) {
-      const url = window.location.href;
-      const text = `भाई, सरकारी फॉर्म के लिए फोटो/PDF रिसाइज और पिक्सल सेट करने का सबसे बढ़िया फ्री टूल: ${url}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function openModal(modalId) {
-      document.getElementById(modalId).classList.remove('hidden');
-    }
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.add('hidden');
-    }
-  </script>
-</head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
-
-  <!-- Header -->
-  <header class="bg-gradient-to-r from-emerald-600 to-teal-800 text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="text-center sm:text-left">
-        <h1 class="text-2xl font-black tracking-wide">⚡ DocPhotoHub</h1>
-        <p class="text-xs text-emerald-100 mt-0.5">PDF Compress, Photo Resizer व बैकग्राउंड चेंजर टूलकिट</p>
+    <!-- 3. PDF Background Color Changer -->
+    <div id="tool-pdfbg" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-2xl">📑</span>
+        <h2 class="text-lg font-bold text-slate-800">PDF Background Color (आई-केयर व कस्टम कलर)</h2>
       </div>
-      <div class="flex items-center gap-2">
-        <a href="https://smarttoolshub-in.github.io/SMART-TOOL/" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-md transition flex items-center gap-1">
-          <span>⚡ All Calculators ➔</span>
-        </a>
-        <button onclick="shareOnWhatsApp('DocPhotoHub')" class="bg-emerald-500 hover:bg-emerald-400 text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow">
-          <span>💬 WhatsApp शेयर</span>
+      <p class="text-xs text-slate-500 mb-4">PDF के पेजों के पीछे अपनी पसंद का कोई भी बैकग्राउंड कलर लगाएं।</p>
+
+      <div class="space-y-4">
+        <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-emerald-500 transition cursor-pointer" onclick="document.getElementById('pdfBgInput').click()">
+          <span class="text-3xl">📄</span>
+          <p class="text-xs font-semibold text-slate-600 mt-2">यहाँ PDF फाइल चुनें</p>
+          <p id="pdfBgFileName" class="text-[11px] text-emerald-600 font-bold mt-1"></p>
+          <input type="file" id="pdfBgInput" accept="application/pdf" class="hidden" onchange="document.getElementById('pdfBgFileName').innerText = this.files[0] ? this.files[0].name : ''">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">बैकग्राउंड थीम चुनें या खुद हेक्स कोड लिखें:</label>
+          <select id="pdfBgColorSelect" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm bg-white mb-2">
+            <option value="#fff9eb">📖 आई-केयर क्रीम (Eye-Protection Cream)</option>
+            <option value="#f1f5f9">🔘 हल्का ग्रे (Soft Slate)</option>
+            <option value="#ecfdf5">🌿 मिंट ग्रीन (Soft Mint)</option>
+            <option value="#ffffff">⬜ क्लीन व्हाइट</option>
+          </select>
+          <input type="text" id="customPdfHex" placeholder="या खुद से हेक्स कोड लिखें (उदा. #e0f2fe)" oninput="document.getElementById('pdfBgColorSelect').value = this.value" class="w-full p-2.5 border border-slate-300 rounded-lg text-xs">
+        </div>
+
+        <button type="button" onclick="processPdfBgColor()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+          PDF बैकग्राउंड बदलें और डाउनलोड करें
         </button>
-        <div class="text-xs bg-white/20 px-3 py-1.5 rounded-full font-medium backdrop-blur-sm">
-          🔒 100% प्राइवेट
+        <div id="pdfBgStatus" class="p-3 bg-teal-50 text-teal-900 rounded-lg text-xs font-semibold text-center hidden"></div>
+      </div>
+    </div>
+
+    <!-- 4. Photo Resizer (Custom KB & Pixels) -->
+    <div id="tool-resizer" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-2xl">🖼️</span>
+        <h2 class="text-lg font-bold text-slate-800">Govt Exam Photo Resizer (खुद से KB व Pixels टाइप करें)</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">सरकारी फॉर्म के अनुसार अपनी मर्जी से KB और Width x Height (Pixels) खुद टाइप करें।</p>
+      
+      <div class="space-y-3">
+        <input type="file" id="resizeInput" accept="image/*" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
+        
+        <div class="bg-slate-50 p-4 rounded-xl border space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">✍️ टार्गेट KB (खुद लिखें):</label>
+            <input type="number" id="resizeTargetKb" value="35" placeholder="उदा. 20, 35, 50" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm bg-white font-bold">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">✍️ चौड़ाई / Width (px):</label>
+              <input type="number" id="resizeCustomWidth" placeholder="उदा. 200 (वैकल्पिक)" class="w-full p-2.5 border border-slate-300 rounded-lg text-xs bg-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">✍️ लंबाई / Height (px):</label>
+              <input type="number" id="resizeCustomHeight" placeholder="उदा. 230 (वैकल्पिक)" class="w-full p-2.5 border border-slate-300 rounded-lg text-xs bg-white">
+            </div>
+          </div>
+        </div>
+
+        <button type="button" onclick="processCompressWithPixels()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+          फोटो रिसाइज करें (Compress Now)
+        </button>
+      </div>
+
+      <div id="resizerResult" class="mt-5 p-4 bg-emerald-50 rounded-xl border border-emerald-200 hidden text-center space-y-3">
+        <p id="sizeText" class="text-xs font-bold text-emerald-900"></p>
+        <img id="resizerPreview" class="max-h-48 mx-auto rounded-lg border shadow-sm">
+        <div class="flex justify-center gap-2">
+          <a id="resizerDownload" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2.5 px-5 rounded-lg transition shadow">
+            ⬇️ फोटो डाउनलोड करें
+          </a>
         </div>
       </div>
     </div>
-  </header>
 
-  <!-- Navigation Tabs -->
-  <div class="max-w-6xl mx-auto px-4 mt-6 w-full">
-    <div class="flex flex-wrap gap-2 justify-center border-b border-slate-200 pb-4">
-      <button type="button" onclick="switchTab('compresspdf')" id="tab-compresspdf" class="tab-btn bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-md">🗜️ Compress PDF</button>
-      <button type="button" onclick="switchTab('bgchanger')" id="tab-bgchanger" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">🎨 Photo BG Change</button>
-      <button type="button" onclick="switchTab('pdfbg')" id="tab-pdfbg" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">📑 PDF BG Color</button>
-      <button type="button" onclick="switchTab('resizer')" id="tab-resizer" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">🖼️ Photo Resizer</button>
-      <button type="button" onclick="switchTab('img2pdf')" id="tab-img2pdf" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">📄 Photo to PDF</button>
-      <button type="button" onclick="switchTab('mergepdf')" id="tab-mergepdf" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">📎 Merge PDF</button>
-      <button type="button" onclick="switchTab('passport')" id="tab-passport" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">👤 Passport Size</button>
-      <button type="button" onclick="switchTab('rotate')" id="tab-rotate" class="tab-btn bg-white text-slate-700 hover:bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold transition border border-slate-200">↻ Rotate</button>
+    <!-- 5. Photo to PDF -->
+    <div id="tool-img2pdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-2xl">📄</span>
+        <h2 class="text-lg font-bold text-slate-800">Photo to PDF Converter</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">एक या अधिक तस्वीरों को मिलाकर साफ A4 PDF बनाएं।</p>
+      <div class="space-y-3">
+        <input type="file" id="pdfImgInput" accept="image/*" multiple class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
+        <button type="button" onclick="processImgToPdf()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+          PDF बनाएं और डाउनलोड करें
+        </button>
+        <div id="pdfStatus" class="p-3 bg-teal-50 text-teal-900 rounded-lg text-xs font-semibold text-center hidden"></div>
+      </div>
+    </div>
+
+    <!-- 6. Merge PDFs -->
+    <div id="tool-mergepdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-2xl">📎</span>
+        <h2 class="text-lg font-bold text-slate-800">Merge PDF Files (पीडीएफ जोड़ें)</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">दो या अधिक PDF फाइलों को जोड़कर एक फाइल बनाएं।</p>
+      <div class="space-y-3">
+        <input type="file" id="mergeInput" accept="application/pdf" multiple class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
+        <button type="button" onclick="processMergePdf()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+          सभी PDF जोड़ें (Merge)
+        </button>
+        <div id="mergeStatus" class="p-3 bg-blue-50 text-blue-900 rounded-lg text-xs font-semibold text-center hidden"></div>
+      </div>
+    </div>
+
+    <!-- 7. Passport Size with Custom Pixels -->
+    <div id="tool-passport" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-2xl">👤</span>
+        <h2 class="text-lg font-bold text-slate-800">Passport Photo & Custom Pixel Maker</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">फोटो अपलोड करें, और अपनी पसंद के पिक्सल (Width x Height) खुद लिखकर सेट करें।</p>
+      
+      <div class="space-y-3">
+        <input type="file" id="passportInput" accept="image/*" onchange="loadPassportImage(this)" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
+        
+        <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700">✍️ चौड़ाई / Width (px):</label>
+            <input type="number" id="passPixelWidth" value="350" oninput="drawPassportPreview()" class="w-full p-2 border rounded text-xs bg-white font-bold">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700">✍️ लंबाई / Height (px):</label>
+            <input type="number" id="passPixelHeight" value="450" oninput="drawPassportPreview()" class="w-full p-2 border rounded text-xs bg-white font-bold">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border">
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600">जूम (Zoom):</label>
+            <input type="range" id="passZoom" min="0.5" max="2.5" step="0.1" value="1" oninput="drawPassportPreview()" class="w-full">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-600">ऊपर/नीचे (Vertical Offset):</label>
+            <input type="range" id="passY" min="-200" max="200" value="0" oninput="drawPassportPreview()" class="w-full">
+          </div>
+        </div>
+
+        <div class="text-center">
+          <canvas id="passportCanvas" class="max-h-48 mx-auto rounded border-2 border-indigo-300 mb-3 shadow bg-white"></canvas>
+        </div>
+
+        <button type="button" onclick="downloadPassportPhoto()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+          ⬇️ फोटो डाउनलोड करें (कस्टम पिक्सल सहित)
+        </button>
+      </div>
+    </div>
+
+    <!-- 8. Rotate Image -->
+    <div id="tool-rotate" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-2xl">↻</span>
+        <h2 class="text-lg font-bold text-slate-800">Rotate Image</h2>
+      </div>
+      <p class="text-xs text-slate-500 mb-4">तिरछी या उल्टी फोटो को 90 डिग्री घुमाएँ।</p>
+      <div class="space-y-3">
+        <input type="file" id="rotateInput" accept="image/*" onchange="loadRotatePreview()" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm">
+        <div class="flex gap-2">
+          <button type="button" onclick="rotateImage(90)" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs">↻ 90° Right</button>
+          <button type="button" onclick="rotateImage(-90)" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs">↺ 90° Left</button>
+          <button type="button" onclick="downloadRotated()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs">⬇️ Save</button>
+        </div>
+      </div>
+      <div class="mt-4 text-center">
+        <canvas id="rotateCanvas" class="max-h-60 mx-auto rounded border hidden"></canvas>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Legal Modals -->
+  <div id="aboutModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-2xl p-6 space-y-3 shadow-xl">
+      <h3 class="text-lg font-bold text-slate-800">हमारे बारे में (About Us)</h3>
+      <p class="text-xs text-slate-600 leading-relaxed">DocPhotoHub छात्रों और नागरिकों के लिए निःशुल्क ऑनलाइन टूल है।</p>
+      <button onclick="closeModal('aboutModal')" class="w-full bg-slate-800 text-white py-2 rounded-lg text-xs font-bold">बंद करें</button>
     </div>
   </div>
 
-  <!-- Main Tools Area -->
-  <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow">
+  <div id="privacyModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-2xl p-6 space-y-3 shadow-xl">
+      <h3 class="text-lg font-bold text-slate-800">गोपनीयता नीति (Privacy Policy)</h3>
+      <p class="text-xs text-slate-600 leading-relaxed">सभी फाइल्स सीधे आपके ब्राउज़र के भीतर प्रोसेस होती हैं।</p>
+      <button onclick="closeModal('privacyModal')" class="w-full bg-slate-800 text-white py-2 rounded-lg text-xs font-bold">बंद करें</button>
+    </div>
+  </div>
 
-    <!-- 1. Compress PDF -->
-    <div id="tool-compresspdf" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: block;">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-2xl">🗜️</span>
-        <h2 class="text-lg font-bold text-slate-800">Compress PDF (सटीक टार्गेट KB)</h2>
-      </div>
-      <p class="text-xs text-slate-500 mb-4">जितनी KB की PDF चाहिए, यहाँ टाइप करें। अब फाइल बहुत ज्यादा छोटी नहीं होगी, बल्कि बेहतरीन क्वालिटी के साथ सटीक साइज बनेगी।</p>
+  <div id="contactModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-2xl p-6 space-y-3 shadow-xl">
+      <h3 class="text-lg font-bold text-slate-800">संपर्क करें (Contact Us)</h3>
+      <p class="text-xs text-slate-600 leading-relaxed">Email: support@smarttoolshub.in</p>
+      <button onclick="closeModal('contactModal')" class="w-full bg-slate-800 text-white py-2 rounded-lg text-xs font-bold">बंद करें</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800 text-center space-y-3">
+    <p class="text-slate-200 font-bold text-sm">DocPhotoHub - आपका संपूर्ण PDF व डॉक्यूमेंट टूलकिट</p>
+    <div class="flex justify-center gap-4 text-xs">
+      <button onclick="openModal('aboutModal')" class="hover:text-white underline">About Us</button>
+      <span>•</span>
+      <button onclick="openModal('privacyModal')" class="hover:text-white underline">Privacy Policy</button>
+      <span>•</span>
+      <button onclick="openModal('contactModal')" class="hover:text-white underline">Contact Us</button>
+    </div>
+    <p class="text-slate-500">सभी फाइलें आपके डिवाइस के भीतर प्रोसेस होती हैं। © 2026 DocPhotoHub.</p>
+  </footer>
+
+  <!-- Core JavaScript Operations -->
+  <script>
+    function setTargetKb(val) {
+      document.getElementById('pdfTargetKb').value = val;
+    }
+
+    // 1. PDF Compressor (Smart Target KB & Balanced Quality Fix)
+    async function processCompressPdf() {
+      const file = document.getElementById('compressPdfInput').files[0];
+      if (!file) return alert("कृपया पहले एक PDF फाइल चुनें!");
       
-      <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-emerald-500 transition cursor-pointer mb-4" onclick="document.getElementById('compressPdfInput').click()">
-        <span class="text-3xl">📂</span>
-        <p class="text-xs font-semibold text-slate-600 mt-2">यहाँ PDF फाइल चुनें या ड्रैग करें</p>
-        <p id="compressPdfFileName" class="text-[11px] text-emerald-600 font-bold mt-1"></p>
-        <input type="file" id="compressPdfInput" accept="application/pdf" class="hidden" onchange="document.getElementById('compressPdfFileName').innerText = this.files[0] ? this.files[0].name : ''">
-      </div>
+      let targetKb = parseFloat(document.getElementById('pdfTargetKb').value) || 200;
+      const pBox = document.getElementById('compressProgressBox');
+      const pBar = document.getElementById('compressProgressBar');
+      const pStatus = document.getElementById('compressStatusText');
+      const pPercent = document.getElementById('compressPercentText');
+      const resultBox = document.getElementById('compressPdfResult');
 
-      <div class="space-y-3">
-        <label class="block text-xs font-semibold text-slate-600">टार्गेट साइज (KB में खुद टाइप करें):</label>
-        <div class="grid grid-cols-4 gap-2">
-          <button type="button" onclick="setTargetKb(100)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">100 KB</button>
-          <button type="button" onclick="setTargetKb(200)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">200 KB</button>
-          <button type="button" onclick="setTargetKb(300)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">300 KB</button>
-          <button type="button" onclick="setTargetKb(500)" class="bg-slate-100 hover:bg-emerald-50 border border-slate-200 py-1.5 rounded-lg text-xs font-bold">500 KB</button>
-        </div>
-        <input type="number" id="pdfTargetKb" value="200" placeholder="अपनी पसंद का KB लिखें (उदा. 300)" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm font-bold">
+      pBox.classList.remove('hidden');
+      resultBox.classList.add('hidden');
+      pBar.style.width = '10%';
+      pPercent.innerText = '10%';
+      pStatus.innerText = 'PDF स्कैन हो रही है...';
 
-        <div id="compressProgressBox" class="hidden space-y-1">
-          <div class="flex justify-between text-xs font-bold text-slate-600">
-            <span id="compressStatusText">प्रोसेसिंग...</span>
-            <span id="compressPercentText">0%</span>
-          </div>
-          <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-            <div id="compressProgressBar" class="bg-emerald-600 h-full w-0 transition-all duration-200"></div>
-          </div>
-        </div>
+      try {
+        const fileData = await file.arrayBuffer();
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        
+        const loadingTask = pdfjsLib.getDocument({ data: fileData });
+        const pdf = await loadingTask.promise;
+        const totalPages = pdf.numPages;
 
-        <button type="button" onclick="processCompressPdf()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
-          PDF कंप्रेस करें (Compress Now)
-        </button>
-      </div>
+        let scale = targetKb < 150 ? 1.0 : (targetKb < 400 ? 1.3 : 1.6);
+        let quality = targetKb < 150 ? 0.5 : (targetKb < 400 ? 0.75 : 0.9);
 
-      <div id="compressPdfResult" class="mt-5 p-4 bg-emerald-50 rounded-xl border border-emerald-200 hidden text-center space-y-3">
-        <p id="pdfSizeDetails" class="text-xs font-bold text-emerald-900"></p>
-        <div class="flex justify-center gap-2">
-          <a id="compressPdfDlBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2.5 px-6 rounded-lg transition shadow">
-            ⬇️ कंप्रेस PDF डाउनलोड करें
-          </a>
-        </div>
-      </div>
-    </div>
+        const { jsPDF } = window.jspdf;
+        const newPdf = new jsPDF('p', 'mm', 'a4');
 
-    <!-- 2. Photo & Signature Background Changer -->
-    <div id="tool-bgchanger" class="tool-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200" style="display: none;">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-2xl">🎨</span>
-        <h2 class="text-lg font-bold text-slate-800">Photo & Signature Background Changer</h2>
-      </div>
-      <p class="text-xs text-slate-500 mb-4">पासपोर्ट फोटो के पीछे रंग भरें या हस्ताक्षर (Sign) का बैकग्राउंड साफ करें।</p>
+        for (let i = 1; i <= totalPages; i++) {
+          const progress = Math.round((i / totalPages) * 85);
+          pBar.style.width = progress + '%';
+          pPercent.innerText = progress + '%';
+          pStatus.innerText = `पेज ${i} / ${totalPages} कंप्रेस हो रहा है...`;
 
-      <div class="space-y-4">
-        <div class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-emerald-500 transition cursor-pointer" onclick="document.getElementById('bgImgInput').click()">
-          <span class="text-3xl">🖼️</span>
-          <p class="text-xs font-semibold text-slate-600 mt-2">फोटो या सिग्नेचर चुनें</p>
-          <p id="bgFileName" class="text-[11px] text-emerald-600 font-bold mt-1"></p>
-          <input type="file" id="bgImgInput" accept="image/*" class="hidden" onchange="loadBgImagePreview(this)">
-        </div>
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: scale });
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">नया बैकग्राउंड चुनें या खुद कोड लिखें:</label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
-            <button type="button" onclick="setBgMode('transparent')" class="bg-slate-100 hover:bg-slate-200 border p-2 rounded-lg text-xs font-bold text-slate-700">🏁 पारदर्शी (Sign)</button>
-            <button type="button" onclick="setBgMode('#2563eb')" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg text-xs font-bold">🟦 पासपोर्ट ब्लू</button>
-            <button type="button" onclick="setBgMode('#ffffff')" class="bg-white border-2 border-slate-300 hover:bg-slate-50 text-slate-800 p-2 rounded-lg text-xs font-bold">⬜ प्योर व्हाइट</button>
-            <button type="button" onclick="setBgMode('#e2e8f0')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 p-2 rounded-lg text-xs font-bold">🔘 लाइट ग्रे</button>
-          </div>
-          <input type="text" id="customHexColor" placeholder="या खुद से हेक्स कलर कोड लिखें (उदा. #ff0000)" oninput="setBgMode(this.value)" class="w-full p-2.5 border border-slate-300 rounded-lg text-xs">
-        </div>
+          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+          const imgData = canvas.toDataURL('image/jpeg', quality);
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">सेंसिटिविटी (Sensitivity):</label>
-          <input type="range" id="bgTolerance" min="10" max="80" value="30" class="w-full">
-        </div>
+          if (i > 1) newPdf.addPage();
+          newPdf.addImage(imgData, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+        }
 
-        <button type="button" onclick="processChangeBg()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
-          बैकग्राउंड बदलें (Apply)
-        </button>
-      </div>
+        pBar.style.width = '100%';
+        pPercent.innerText = '100%';
+        pStatus.innerText = 'पूर्ण!';
 
-      <div id="bgResultBox" class="mt-5 p-4 bg-slate-100 rounded-xl border border-slate-200 hidden text-center space-y-3">
-        <p class="text-xs font-bold text-slate-700">फाइनल फोटो प्रीव्यू:</p>
-        <canvas id="bgCanvas" class="max-h-56 mx-auto rounded border bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:8px_8px]"></canvas>
-        <div class="flex justify-center gap-2 mt-3">
-          <a id="bgDownloadBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2.5 px-6 rounded-lg transition shadow">
-            ⬇️ डाउनलोड करें
-          </a>
-        </div>
-      </div>
-    </div>
+        const outBlob = newPdf.output('blob');
+        const oldKB = (file.size / 1024).toFixed(1);
+        const newKB = (outBlob.size / 1024).toFixed(1);
 
+        document.getElementById('pdfSizeDetails').innerHTML = `
+          <div>पुरानी साइज: <span class="text-slate-600">${oldKB} KB</span> ➔ नई साइज: <span class="text-emerald-700 font-bold">${newKB} KB</span></div>
+          <div class="text-[11px] text-slate-500 mt-1">(टार्गेट साइज: ${targetKb} KB)</div>
+        `;
+        const dl = document.getElementById('compressPdfDlBtn');
+        dl.href = URL.createObjectURL(outBlob);
+        dl.download = `compressed-${Math.round(newKB)}kb-${file.name}`;
+
+        pBox.classList.add('hidden');
+        resultBox.classList.remove('hidden');
+      } catch (e) {
+        console.error(e);
+        alert("इस PDF को कंप्रेस करने में समस्या आई।");
+        pBox.classList.add('hidden');
+      }
+    }
+
+    // 2. Background Changer
+    let loadedBgImg = null;
+    let selectedBgMode = 'transparent';
+
+    function loadBgImagePreview(input) {
+      if (!input.files || !input.files[0]) return;
+      document.getElementById('bgFileName').innerText = input.files[0].name;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        loadedBgImg = new Image();
+        loadedBgImg.src = e.target.result;
+        loadedBgImg.onload = () => processChangeBg();
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    function setBgMode(mode) {
+      selectedBgMode = mode;
+      processChangeBg();
+    }
+
+    function processChangeBg() {
+      if (!loadedBgImg) return;
+      
+      const canvas = document.getElementById('bgCanvas');
+      const ctx = canvas.getContext('2d');
+      const tolerance = parseInt(document.getElementById('bgTolerance').value) || 30;
+
+      canvas.width = loadedBgImg.width;
+      canvas.height = loadedBgImg.height;
+      ctx.drawImage(loadedBgImg, 0, 0);
+
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imgData.data;
+
+      const bgR = data[0], bgG = data[1], bgB = data[2];
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i+1], b = data[i+2];
+        const dist = Math.sqrt((r - bgR)**2 + (g - bgG)**2 + (b - bgB)**2);
+
+        if (dist < tolerance * 2.5) {
+          if (selectedBgMode === 'transparent') {
+            data[i+3] = 0;
+          } else {
+            const hex = selectedBgMode;
+            if (hex.startsWith('#') && hex.length === 7) {
+              data[i] = parseInt(hex.substr(1,2), 16);
+              data[i+1] = parseInt(hex.substr(3,2), 16);
+              data[i+2] = parseInt(hex.substr(5,2), 16);
+              data[i+3] = 255;
+            }
+          }
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+      document.getElementById('bgResultBox').classList.remove('hidden');
+
+      const dl = document.getElementById('bgDownloadBtn');
+      const ext = selectedBgMode === 'transparent' ? 'png' : 'jpg';
+      dl.href = canvas.toDataURL(selectedBgMode === 'transparent' ? 'image/png' : 'image/jpeg', 0.95);
+      dl.download = `bg-changed.${ext}`;
+    }
+
+    // 3. PDF Background Color
+    async function processPdfBgColor() {
+      const file = document.getElementById('pdfBgInput').files[0];
+      if (!file) return alert("कृपया एक PDF चुनें!");
+      const color = document.getElementById('pdfBgColorSelect').value;
+      const status = document.getElementById('pdfBgStatus');
+      status.innerText = "PDF बैकग्राउंड बदला जा रहा है...";
+      status.classList.remove('hidden');
+
+      try {
+        const fileData = await file.arrayBuffer();
+        const pdfDoc = await PDFLib.PDFDocument.load(fileData);
+        const pages = pdfDoc.getPages();
+
+        let hex = color;
+        if (!hex.startsWith('#')) hex = '#ffffff';
+
+        const r = parseInt(hex.substr(1,2), 16) / 255;
+        const g = parseInt(hex.substr(3,2), 16) / 255;
+        const b = parseInt(hex.substr(5,2), 16) / 255;
+
+        for (const page of pages) {
+          const { width, height } = page.getSize();
+          page.drawRectangle({
+            x: 0, y: 0, width, height,
+            color: PDFLib.rgb(r, g, b),
+            opacity: 0.85
+          });
+        }
+
+        const outBytes = await pdfDoc.save();
+        const blob = new Blob([outBytes], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `colored-bg-${file.name}`;
+        link.click();
+        status.innerText = "✅ बैकग्राउंड वाली PDF डाउनलोड हो गई!";
+      } catch (e) {
+        console.error(e);
+        status.innerText = "त्रुटि: PDF प्रोसेस नहीं हो सकी।";
+      }
+    }
+
+    // 4. Photo Resizer with Custom KB & Pixels
+    function processCompressWithPixels() {
+      const file = document.getElementById('resizeInput').files[0];
+      if (!file) return alert("कृपया एक फोटो चुनें!");
+
+      const targetKb = parseFloat(document.getElementById('resizeTargetKb').value) || 35;
+      const customW = parseInt(document.getElementById('resizeCustomWidth').value);
+      const customH = parseInt(document.getElementById('resizeCustomHeight').value);
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          canvas.width = (customW && customW > 0) ? customW : img.width;
+          canvas.height = (customH && customH > 0) ? customH : img.height;
+
+          if (customW && !customH) {
+            canvas.height = img.height * (customW / img.width);
+          } else if (!customW && customH) {
+            canvas.width = img.width * (customH / img.height);
+          }
+
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          let quality = 0.9;
+          let dataUrl = canvas.toDataURL('image/jpeg', quality);
+          let currentKb = (dataUrl.length * 3 / 4) / 1024;
+
+          for (let i = 0; i < 6 && currentKb > targetKb; i++) {
+            quality -= 0.12;
+            if (quality < 0.1) break;
+            dataUrl = canvas.toDataURL('image/jpeg', quality);
+            currentKb = (dataUrl.length * 3 / 4) / 1024;
+          }
+
+          document.getElementById('resizerPreview').src = dataUrl;
+          document.getElementById('sizeText').innerText = `साइज: ${currentKb.toFixed(1)} KB | पिक्सल: ${Math.round(canvas.width)} × ${Math.round(canvas.height)} px`;
+          const dl = document.getElementById('resizerDownload');
+          dl.href = dataUrl;
+          dl.download = `resized-${Math.round(canvas.width)}x${Math.round(canvas.height)}-${Math.round(currentKb)}kb.jpg`;
+          document.getElementById('resizerResult').classList.remove('hidden');
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 5. Images to PDF
+    async function processImgToPdf() {
+      const files = document.getElementById('pdfImgInput').files;
+      if (!files.length) return alert("कम से कम एक फोटो चुनें!");
+      const status = document.getElementById('pdfStatus');
+      status.innerText = "PDF तैयार हो रही है...";
+      status.classList.remove('hidden');
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      for (let i = 0; i < files.length; i++) {
+        const dataUrl = await fileToDataUrl(files[i]);
+        if (i > 0) pdf.addPage();
+        pdf.addImage(dataUrl, 'JPEG', 10, 10, 190, 270);
+      }
+      pdf.save("photos-document.pdf");
+      status.innerText = "✅ PDF डाउनलोड हो गई!";
+    }
+
+    // 6. Merge PDFs
+    async function processMergePdf() {
+      const files = document.getElementById('mergeInput').files;
+      if (files.length < 2) return alert("कृपया कम से कम 2 PDF फाइलें चुनें!");
+      const status = document.getElementById('mergeStatus');
+      status.innerText = "PDF फाइलें जोड़ी जा रही हैं...";
+      status.classList.remove('hidden');
+
+      const mergedPdf = await PDFLib.PDFDocument.create();
+      for (const file of files) {
+        const bytes = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.load(bytes);
+        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        pages.forEach(p => mergedPdf.addPage(p));
+      }
+      const finalBytes = await mergedPdf.save();
+      const blob = new Blob([finalBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = "merged-document.pdf";
+      link.click();
+      status.innerText = "✅ सभी PDF सफलतापूर्वक जुड़ गईं!";
+    }
+
+    // 7. Passport Cropper & Custom Pixels
+    let passportImgObj = null;
+
+    function loadPassportImage(input) {
+      if (!input.files || !input.files[0]) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        passportImgObj = new Image();
+        passportImgObj.src = e.target.result;
+        passportImgObj.onload = () => drawPassportPreview();
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    function drawPassportPreview() {
+      if (!passportImgObj) return;
+      const canvas = document.getElementById('passportCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const pWidth = parseInt(document.getElementById('passPixelWidth').value) || 350;
+      const pHeight = parseInt(document.getElementById('passPixelHeight').value) || 450;
+
+      canvas.width = pWidth;
+      canvas.height = pHeight;
+
+      const zoom = parseFloat(document.getElementById('passZoom').value) || 1;
+      const offsetY = parseInt(document.getElementById('passY').value) || 0;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, pWidth, pHeight);
+
+      ctx.save();
+      ctx.translate(pWidth / 2, pHeight / 2 + offsetY);
+      ctx.scale(zoom, zoom);
+      ctx.drawImage(passportImgObj, -passportImgObj.width / 2, -passportImgObj.height / 2);
+      ctx.restore();
+    }
+
+    function downloadPassportPhoto() {
+      if (!passportImgObj) return alert("कृपया पहले पासपोर्ट फोटो चुनें!");
+      const canvas = document.getElementById('passportCanvas');
+      const dl = document.createElement('a');
+      dl.href = canvas.toDataURL('image/jpeg', 0.95);
+      dl.download = `custom-size-${canvas.width}x${canvas.height}px.jpg`;
+      dl.click();
+    }
+
+    // 8. Rotate Logic
+    let currentAngle = 0;
+    let rotateImgObj = null;
+
+    function loadRotatePreview() {
+      const file = document.getElementById('rotateInput').files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        rotateImgObj = new Image();
+        rotateImgObj.src = e.target.result;
+        rotateImgObj.onload = () => {
+          currentAngle = 0;
+          renderRotation();
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function rotateImage(deg) {
+      if (!rotateImgObj) return alert("पहले एक फोटो चुनें!");
+      currentAngle = (currentAngle + deg) % 360;
+      renderRotation();
+    }
+
+    function renderRotation() {
+      const canvas = document.getElementById('rotateCanvas');
+      const ctx = canvas.getContext('2d');
+      const rads = currentAngle * Math.PI / 180;
+      const is90 = Math.abs(currentAngle) === 90 || Math.abs(currentAngle) === 270;
+
+      canvas.width = is90 ? rotateImgObj.height : rotateImgObj.width;
+      canvas.height = is90 ? rotateImgObj.width : rotateImgObj.height;
+
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(rads);
+      ctx.drawImage(rotateImgObj, -rotateImgObj.width / 2, -rotateImgObj.height / 2);
+      ctx.restore();
+      canvas.classList.remove('hidden');
+    }
+
+    function downloadRotated() {
+      const canvas = document.getElementById('rotateCanvas');
+      if (canvas.classList.contains('hidden')) return alert("पहले फोटो चुनें!");
+      const dl = document.createElement('a');
+      dl.href = canvas.toDataURL('image/jpeg', 0.9);
+      dl.download = "rotated-image.jpg";
+      dl.click();
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise(res => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.readAsDataURL(file);
+      });
+    }
+  </script>
+</body>
+</html>
